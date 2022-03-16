@@ -225,7 +225,123 @@ Para probar el programa debemos de ejecutar desde la carpeta del proyecto en un 
 
 Si funciono todo correctamente. Puedes abrir la aplicación desde un navegador.
 
+```EjecutarProgramaLocalHost
+   localhost:4567/hello
+```
+
 ![primeraparte2.png](https://i.postimg.cc/4xxmnWF3/primeraparte2.png)
+
+### Segunda Parte: crear imagen para docker y subirla.
+
+1. En la raíz de su proyecto cree un archivo denominado Dockerfile con el siguiente contenido:
+2. Usando la herramienta de línea de comandos de Docker construya la imagen:
+3. Revise que la imagen fue construida
+4. A partir de la imagen creada cree tres instancias de un contenedor docker independiente de la consola (opción “-d”) y con el puerto 6000 enlazado a un puerto físico de su máquina (opción -p):
+5. Asegúrese que el contenedor está corriendo
+6. Acceda por el browser a http://localhost:34002/hello, o a http://localhost:34000/hello, o a http://localhost:34001/hello para verificar que están corriendo.
+
+**En la raíz de su proyecto cree un archivo denominado Dockerfile.**
+
+Para crear el archivo Dockerfile, nos hubicamos en la carpeta raiz y abrimos un cmd.
+Luego pasamos a ejecutar el siguiente comando.
+
+```CreandoArchivoDockerFile
+   echo "Hola" > Dockerfile
+```
+
+Abrimos el archivo con un editor de texto y eliminamos su contenido para poner el siguiente.
+
+```ContenidoDocker
+    FROM openjdk:8
+
+    WORKDIR /usrapp/bin
+    
+    ENV PORT 6000
+    
+    COPY /target/classes /usrapp/bin/classes
+    COPY /target/dependency /usrapp/bin/dependency
+    
+    CMD ["java","-cp","./classes:./dependency/*","edu.escuelaing.arep.TallerVirtualizacion.SparkWebServer"]
+```
+
+**Usando la herramienta de línea de comandos de Docker construya la imagen:**
+
+```CreandoArchivoDockerFile
+   docker build --tag primer_docker_spark .
+```
+
+![segundaparte1.png](https://i.postimg.cc/sgfxNTYr/segundaparte1.png)
+
+![segundaparte2.png](https://i.postimg.cc/ZRPhZSmD/segundaparte2.png)
+
+**Revise que la imagen fue construida**
+
+```imagenDocker
+   docker images
+```
+
+![segundaparte3.png](https://i.postimg.cc/NjyqFTYX/segundaparte3.png)
+
+Debera ver algo similar.
+
+```imagenDocker2
+    REPOSITORY              TAG       IMAGE ID       CREATED       SIZE
+    primer_docker_spark     latest    c9fc19b9fc38   4 hours ago   530MB
+```
+
+**A partir de la imagen creada cree tres instancias de un contenedor docker independiente.**
+
+```CrenadoInstancias
+    docker run -d -p 34000:6000 --name firstdockercontainer dockersparkprimer
+    docker run -d -p 34001:6000 --name firstdockercontainer2 dockersparkprimer
+    docker run -d -p 34002:6000 --name firstdockercontainer3 dockersparkprimer
+```
+
+![segundaparte4.png](https://i.postimg.cc/gknBHW5F/segundaparte4.png)
+
+**Asegúrese que el contenedor está corriendo**
+
+```imagenDocker
+   docker ps
+```
+
+Mirando desde Docker
+
+![segundaparte5.png](https://i.postimg.cc/sf0TXL2n/segundaparte5.png)
+
+
+Debera ver algo similar.
+
+```dockerPs
+    CONTAINER ID   IMAGE                 COMMAND                  CREATED       STATUS       PORTS                     NAMES9abcb510d025   primer_docker_spark   "java -cp ./classes:…"   4 hours ago   Up 4 hours   0.0.0.0:34002->6000/tcp   firstdockercontainer3
+    3041305b7712   primer_docker_spark   "java -cp ./classes:…"   4 hours ago   Up 4 hours   0.0.0.0:34001->6000/tcp   firstdockercontainer2
+    ac22d2340f2b   primer_docker_spark   "java -cp ./classes:…"   4 hours ago   Up 4 hours   0.0.0.0:34000->6000/tcp   firstdockercontainer
+
+```
+
+![segundaparte6.png](https://i.postimg.cc/vZwLxwwv/segundaparte6.png)
+
+**Acceda por el browser**
+
+```formaUno
+   http://localhost:34000/hello
+```
+
+```formaDos
+   http://localhost:34001/hello
+```
+
+```formaTres
+   http://localhost:34002/hello
+```
+
+Debera ver algo similar.
+
+![segundaparte7.png](https://i.postimg.cc/KzjnhZtm/segundaparte7.png)
+
+### Tercera para subir la imagen a Docker Hub.
+
+### Cuarta parte: AWS.
 
 ### PASOS PARA CLONAR.
 
