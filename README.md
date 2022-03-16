@@ -18,6 +18,215 @@ acabamos de crear.
 3. Tercera para subir la imagen a Docker Hub
 4. Cuarta parte: AWS
 
+### Primera parte crear la aplicación web.
+
+1. Cree un proyecto java usando maven.
+2. Cree la clase principal.
+3. Importe las dependencias de spark Java en el archivo pom
+4. Asegúrese que el proyecto esté compilando hacia la versión 8 de Java, en el archivo pom
+5. Asegúrese que el proyecto este copiando las dependencias en el directorio target al compilar el proyecto. Esto es necesario para poder construir una imagen de contenedor de docker usando los archivos ya compilados de java. Para hacer esto use el purgan de dependencias de Maven. En archivo pom.
+6. Compilar Proyecto.
+7. Verificar que se crearon las dependencias en la carpeta target.
+8. probar programa.
+
+
+**Cree un proyecto java usando maven**
+
+Para crear el proyecto hacemos uso del siguiente comando.
+Abrimos primero una consola cmd y ejecutamos el siguiente codigo.
+
+```Crear proyecto
+mvn archetype:generate -DgroupId=edu.escuelaing.arep.TallerVirtualizacion -DartifactId = miprimer-virtualizacionDocker -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+```
+
+**Cree un proyecto java usando maven**
+
+Creamos la siguiente clase, donde puedes cambiar los comentarios o eliminar si así se prefiere.
+
+```CrearClasePrincipal
+package edu.escuelaing.arep.TallerVirtualizacion;
+import static spark.Spark.*;
+/**
+ * Esta clase define los subprocesos para empezar a ejecutrar.
+ * @author Deivid Medina
+ * @version 15/03/2022
+ */
+
+public class SparkWebServer
+{
+    /**
+     * Clase principal main, la cual invoca los métodos correspondientes para ejecutar el main.
+     * @param args - String []
+     */
+    public static void main( String[] args ){
+        port(getPor());
+        get("/hello", ((request, response) -> "Hello World Docker"));
+    }
+
+    /**
+     * Método que me permite obtener el puerto donde se ejecutara la aplicación, en caso de no ser definido por defecto se dara el puerto 4567
+     * @return int - Retorna el puerto obtenido o sino por defecto el puerto 4567.
+     */
+    private static int getPor() {
+        if (System.getenv("PORT") != null){
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 4567;
+    }
+}
+```
+
+**Importe las dependencias de spark Java en el archivo pom**
+
+En el archivo pom.xml agrege las siguientes dependencias.
+
+```Dependencias
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.sparkjava/spark-core -->
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+    </dependencies>
+```
+
+**Asegúrese que el proyecto esté compilando hacia la versión 8 de Java, en el archivo pom**
+
+```Propiedades
+    <properties>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <maven.compiler.source>8</maven.compiler.source>
+            <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+```
+
+**Asegúrese que el proyecto este copiando las dependencias en el directorio target. En archivo pom.**
+
+```Plugin
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals><goal>copy-dependencies</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+**Compilar Proyecto.**
+
+Para compilar el proyecto debemos dirigirnos a la ruta de la carpeta del proyecto y abrir un cmd.
+
+```Compilar
+    mvn clean install
+```
+
+Si todo salio bien debe obtener algo similar.
+
+```Compilar2
+   [INFO] Scanning for projects...
+[INFO]
+[INFO] --< edu.escuelaing.arep.TallerVirtualizacion:miprimer-virtualizacionDocker >--
+[INFO] Building miprimer-virtualizacionDocker 1.0-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- maven-clean-plugin:2.5:clean (default-clean) @ miprimer-virtualizacionDocker ---
+[INFO] Deleting D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ miprimer-virtualizacionDocker ---
+[WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\src\main\resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ miprimer-virtualizacionDocker ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding Cp1252, i.e. build is platform dependent!
+[INFO] Compiling 1 source file to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\classes
+[INFO]
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ miprimer-virtualizacionDocker ---
+[WARNING] Using platform encoding (Cp1252 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\src\test\resources
+[INFO]
+[INFO] --- maven-compiler-plugin:3.8.0:testCompile (default-testCompile) @ miprimer-virtualizacionDocker ---
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding Cp1252, i.e. build is platform dependent!
+[INFO] Compiling 1 source file to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\test-classes
+[INFO]
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ miprimer-virtualizacionDocker ---
+[INFO] Surefire report directory: D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running edu.escuelaing.arep.TallerVirtualizacion.AppTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO]
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ miprimer-virtualizacionDocker ---
+[INFO] Building jar: D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\miprimer-virtualizacionDocker-1.0-SNAPSHOT.jar
+[INFO]
+[INFO] --- maven-dependency-plugin:3.0.1:copy-dependencies (copy-dependencies) @ miprimer-virtualizacionDocker ---
+[INFO] Copying junit-3.8.1.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\junit-3.8.1.jar
+[INFO] Copying spark-core-2.9.3.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\spark-core-2.9.3.jar
+[INFO] Copying jetty-server-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-server-9.4.31.v20200723.jar
+[INFO] Copying javax.servlet-api-3.1.0.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\javax.servlet-api-3.1.0.jar
+[INFO] Copying jetty-http-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-http-9.4.31.v20200723.jar
+[INFO] Copying jetty-util-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-util-9.4.31.v20200723.jar
+[INFO] Copying jetty-io-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-io-9.4.31.v20200723.jar
+[INFO] Copying jetty-webapp-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-webapp-9.4.31.v20200723.jar
+[INFO] Copying jetty-xml-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-xml-9.4.31.v20200723.jar
+[INFO] Copying jetty-servlet-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-servlet-9.4.31.v20200723.jar
+[INFO] Copying jetty-security-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-security-9.4.31.v20200723.jar
+[INFO] Copying websocket-server-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\websocket-server-9.4.31.v20200723.jar
+[INFO] Copying websocket-common-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\websocket-common-9.4.31.v20200723.jar
+[INFO] Copying websocket-client-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\websocket-client-9.4.31.v20200723.jar
+[INFO] Copying jetty-client-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\jetty-client-9.4.31.v20200723.jar
+[INFO] Copying websocket-servlet-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\websocket-servlet-9.4.31.v20200723.jar
+[INFO] Copying websocket-api-9.4.31.v20200723.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\websocket-api-9.4.31.v20200723.jar
+[INFO] Copying slf4j-simple-1.7.35.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\slf4j-simple-1.7.35.jar
+[INFO] Copying slf4j-api-1.7.35.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\slf4j-api-1.7.35.jar
+[INFO] Copying gson-2.8.9.jar to D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\dependency\gson-2.8.9.jar
+[INFO]
+[INFO] --- maven-install-plugin:2.4:install (default-install) @ miprimer-virtualizacionDocker ---
+[INFO] Installing D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\target\miprimer-virtualizacionDocker-1.0-SNAPSHOT.jar to C:\Users\Deivid\.m2\repository\edu\escuelaing\arep\TallerVirtualizacion\miprimer-virtualizacionDocker\1.0-SNAPSHOT\miprimer-virtualizacionDocker-1.0-SNAPSHOT.jar
+[INFO] Installing D:\Escritorio\Universidad\AREP\LABORATORIO\CORTE DOS\miprimer-virtualizacionDocker\pom.xml to C:\Users\Deivid\.m2\repository\edu\escuelaing\arep\TallerVirtualizacion\miprimer-virtualizacionDocker\1.0-SNAPSHOT\miprimer-virtualizacionDocker-1.0-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  7.465 s
+[INFO] Finished at: 2022-03-15T17:44:24-05:00
+[INFO] ------------------------------------------------------------------------
+ 
+```
+
+**Verificar que se crearon las dependencias en la carpeta target.**
+
+![primeraparte1.png](https://i.postimg.cc/nzPstB1L/primeraparte1.png)
+
+**probar programa.**
+
+Para probar el programa debemos de ejecutar desde la carpeta del proyecto en un cmd.
+
+```EjecutarPrograma
+   java -cp "target/classes:target/dependency/*" edu.escuelaing.arep.TallerVirtualizacion.SparkWebServer
+```
+
+Si funciono todo correctamente. Puedes abrir la aplicación desde un navegador.
+
+![primeraparte2.png](https://i.postimg.cc/4xxmnWF3/primeraparte2.png)
+
 ### PASOS PARA CLONAR.
 
 -  Nos dirigimos a la parte superior de nuestra ubicación, donde daremos click y escribimos la palabra cmd, luego damos enter, con el fin de desplegar
