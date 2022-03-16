@@ -341,6 +341,63 @@ Debera ver algo similar.
 
 ### Tercera para subir la imagen a Docker Hub.
 
+1. Cree una cuenta en Dockerhub y verifique su correo.
+2. Acceda al menu de repositorios y cree un repositorio.
+3. En su motor de docker local cree una referencia a su imagen con el nombre del repositorio a donde desea subirla:
+4. Verifique que la nueva referencia de imagen existe.
+5. Autentíquese en su cuenta de dockerhub (ingrese su usuario y clave si es requerida):
+6. Empuje la imagen al repositorio en DockerHub.
+
+**Cree una cuenta en Dockerhub y verifique su correo.**
+
+* [DockerHub](https://hub.docker.com/)
+
+![terceraparte1.png](https://i.postimg.cc/rprvqkc2/terceraparte1.png)
+
+**Acceda al menu de repositorios y cree un repositorio.**
+
+![terceraparte2.png](https://i.postimg.cc/G3Q6Lz0t/terceraparte2.png)
+
+![terceraparte3.png](https://i.postimg.cc/wjSGfGNf/terceraparte3.png)
+
+**En su motor de docker local cree una referencia a su imagen con el nombre del repositorio**
+
+```formaTres
+   docker tag primer_docker_spark:latest deividmedina30/primer_spark_web_deivid:latest
+```
+
+![terceraparte4.png](https://i.postimg.cc/43VFrQbJ/terceraparte4.png)
+
+**Verifique que la nueva referencia de imagen existe.**
+
+```formaTres
+   docker images
+```
+
+![terceraparte9.png](https://i.postimg.cc/HnRwYfdF/terceraparte9.png)
+
+**Autentíquese en su cuenta de dockerhub (ingrese su usuario y clave si es requerida):**
+
+```formaTres
+   docker login
+```
+
+![terceraparte5.png](https://i.postimg.cc/d3tHZPM1/terceraparte5.png)
+
+**Empuje la imagen al repositorio en DockerHub.**
+
+```formaTres
+   docker push deividmedina30/primer_spark_web_deivid:latest
+```
+
+![terceraparte6.png](https://i.postimg.cc/2ycH4cmx/terceraparte6.png)
+
+![terceraparte7.png](https://i.postimg.cc/FK5TgJtw/terceraparte7.png)
+
+![terceraparte8.png](https://i.postimg.cc/63BzFJp0/terceraparte8.png)
+
+![terceraparte10.png](https://i.postimg.cc/XJvdwVvT/terceraparte10.png)
+
 ### Cuarta parte: AWS.
 
 ### PASOS PARA CLONAR.
