@@ -400,9 +400,129 @@ Debera ver algo similar.
 
 ### Cuarta parte: AWS.
 
+1. Acceda a la maquina virtual
+2. Instalar java.
+3. Instalar Docker.
+4. Iniciando el servicio Docker.
+5. Configure su usuario en el grupo de docker para no tener que ingresar “sudo” cada vez que invoca un comando
+6. Desconectes de la máquina virtual e ingrese nuevamente para que la configuración de grupos de usuarios tenga efecto.
+7. A partir de la imagen creada en Dockerhub cree una instancia de un contenedor docker independiente de la consola (opción “-d”) y con el puerto 6000 enlazado a un puerto físico de su máquina (opción -p):
+8. Abra los puertos de entrada del security group de la máxima virtual para acceder al servicio.
+9. Verifique que pueda acceder  en una url similar a esta (la url específica depende de los valores de su maquina virtual EC2)
+
+**Acceda a la máquina virtual.**
+
+![cuartaparte1.png](https://i.postimg.cc/sXqdp4z7/cuartaparte1.png)
+
+![cuartaparte2.png](https://i.postimg.cc/ZnNkjvYg/cuartaparte2.png)
+
+![cuartaparte3.png](https://i.postimg.cc/sgV8GNWb/cuartaparte3.png)
+
+![cuartaparte4.png](https://i.postimg.cc/htpYL1bv/cuartaparte4.png)
+
+![cuartaparte5.png](https://i.postimg.cc/25tXJjtf/cuartaparte5.png)
+
+![cuartaparte6.png](https://i.postimg.cc/Y06nh6Cp/cuartaparte6.png)
+
+![cuartaparte7.png](https://i.postimg.cc/wTz4nGw3/cuartaparte7.png)
+
+![cuartaparte8.png](https://i.postimg.cc/HLr6QDkv/cuartaparte8.png)
+
+![cuartaparte9.png](https://i.postimg.cc/Dy75xbzX/cuartaparte9.png)
+
+**Instalar java.**
+
+```instalanadoJava
+   sudo yum install java-1.8.0
+```
+
+```instalanadoJava2
+   sudo yum install java-1.8.0-openjdk-devel
+```
+
+![cuartaparte10.png](https://i.postimg.cc/7YX9dYCQ/cuartaparte10.png)
+
+![cuartaparte11.png](https://i.postimg.cc/MH57CdGj/cuartaparte11.png)
+
+![cuartaparte12.png](https://i.postimg.cc/v8ttxHvH/cuartaparte12.png)
+
+**Instalar Docker.**
+
+```instalanadoDocker
+   sudo yum update -y
+```
+
+```instalanadoDocker2
+   sudo yum install docker
+```
+
+![cuartaparte13.png](https://i.postimg.cc/fLhYk6t9/cuartaparte13.png)
+
+**Iniciando el servicio Docker.**
+
+```iniciandoDocker
+   sudo service docker start
+```
+
+![cuartaparte14.png](https://i.postimg.cc/xCyMmtMF/cuartaparte14.png)
+
+**Configure su usuario en el grupo de docker para no tener que ingresar “sudo”.**
+
+```configurandoUsuarioDocker
+   sudo usermod -a -G docker ec2-user
+```
+
+![cuartaparte15.png](https://i.postimg.cc/sD0S5BGy/cuartaparte15.png)
+
+**Desconectes de la máquina virtual e ingrese nuevamente para que la configuración de grupos.**
+
+```salir
+   exit
+```
+
+![cuartaparte16.png](https://i.postimg.cc/YCGFRpQF/cuartaparte16.png)
+
+![cuartaparte17.png](https://i.postimg.cc/HLbyGBZs/cuartaparte17.png)
+
+![cuartaparte18.png](https://i.postimg.cc/j2Sw7KsL/cuartaparte18.png)
+
+**A partir de la imagen creada en Dockerhub cree una instancia de un contenedor docker independiente.**
+
+```creandoInstancia
+    docker run -d -p 35000:6000 --name primer_docker_aws deividmedina30/primer_spark_web_deivid:latest
+```
+
+```dockerimages
+    docker images
+```
+
+```dockerps
+    docker ps
+```
+
+![cuartaparte19.png](https://i.postimg.cc/MKXfZWPL/cuartaparte19.png)
+
+![cuartaparte20.png](https://i.postimg.cc/HsKcVfFk/cuartaparte20.png)
+
+**Abra los puertos de entrada del security group de la máxima virtual para acceder al servicio.**
+
+![cuartaparte21.png](https://i.postimg.cc/kgbV8TdF/cuartaparte21.png)
+
+![cuartaparte22.png](https://i.postimg.cc/5tWXm84c/cuartaparte22.png)
+
+![cuartaparte23.png](https://i.postimg.cc/TPjpNh1K/cuartaparte23.png)
+
+**Verifique que pueda acceder en una url.**
+
+```salir
+   http://ec2-184-73-150-30.compute-1.amazonaws.com:35000/hello
+```
+
+![cuartaparte24.png](https://i.postimg.cc/L4Ggscc6/cuartaparte24.png)
+
 ### PASOS PARA CLONAR.
 
--  Nos dirigimos a la parte superior de nuestra ubicación, donde daremos click y escribimos la palabra cmd, luego damos enter, con el fin de desplegar
+-  Nos dirigimos a la parte superior de nuestra ubicación, donde daremos clic y escribimos la palabra cmd, luego damos enter, con el fin de desplegar
    el Command Prompt, el cual es necesario.
 
 ![img1.png](https://i.postimg.cc/GmSNVZZL/img1.png)
@@ -459,7 +579,7 @@ Para este laboratorio se encontró con la limitación de que docker, no corre ex
 en Windows. Por lo cual se tuvo que proceder a hacer uso de un tutorial donde nos mostraban 
 como resolver dicho problema. El video del tutorial se encuentra en el siguiente link.
 
-* [SolucionDockerWindows](https://www.youtube.com/watch?v=_et7H0EQ8fY&t=346s) -Video tutorial solcuion Docker Windows.
+* [SolucionDockerWindows](https://www.youtube.com/watch?v=_et7H0EQ8fY&t=346s) -Video tutorial solución Docker Windows.
 
 Además de esto se encuentra la limitación que tiene AWS con respecto a sus créditos, ya que
 si no somos cuidadosos podremos llegar perderlos todos dejando alguna máquina prendida. Por eso
@@ -467,7 +587,7 @@ al finalizar este taller se pasó a eliminar de forma inmediata las maquina con 
 
 ### EXTENDER.
 
-Se puede llegar a crear futuras aplicaciones más compleja con ayuda de docker y aws, teniendo
+Se puede llegar a crear futuras aplicaciones más complejas con ayuda de docker y aws, teniendo
 en cuenta siempre sus respectivas limitaciones. Pero para el primer acercamiento por parte de
 nosotros como estudiantes. Es un buen ejemplo de como funcionan Docker.
 
